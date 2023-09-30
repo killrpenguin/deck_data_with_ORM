@@ -4,6 +4,7 @@ import random
 import selenium
 import asyncio
 import aiohttp
+import seleniumwire
 from dataclasses import dataclass, field
 from typing import Dict, List
 import time
@@ -15,7 +16,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from bs4 import BeautifulSoup as bs
 from selenium import webdriver
-from selenium.webdriver import EdgeOptions
+from seleniumwire.webdriver import EdgeOptions
 
 
 class Driver_Obj:
@@ -37,4 +38,6 @@ class Driver_Obj:
             user_agent_list = file.read().strip().split("\n")
             self.user_agent = user_agent_list.pop(random.randint(0, len(user_agent_list)))
             return self.user_agent
+
+
 
