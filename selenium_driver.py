@@ -33,4 +33,8 @@ class Driver_Obj:
         self.driver = webdriver.Edge(options=edge_options)
 
     def get_random_agent(self):
-        pass
+        with open("Master_User_Agents") as file:
+            user_agent_list = file.read().strip().split("\n")
+            self.user_agent = user_agent_list.pop(random.randint(0, len(user_agent_list)))
+            return self.user_agent
+
