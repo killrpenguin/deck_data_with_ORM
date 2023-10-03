@@ -19,3 +19,4 @@ class Decks:
         deck_hrefs = [re.sub('^/.+|.+discord.+|.+scryfall.+|.+docs.+|', '', href) for href in deck_hrefs]
         deck_hrefs = [href.strip() for href in deck_hrefs if '' != href if '/' != href]
         return deck_hrefs
+

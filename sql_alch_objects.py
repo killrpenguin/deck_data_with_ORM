@@ -12,6 +12,7 @@ class Base(DeclarativeBase):
     pass
 
 
+
 class DDB(Base):
     __tablename__ = "DDB_List"
     id: Mapped[int] = mapped_column(primary_key=True)
