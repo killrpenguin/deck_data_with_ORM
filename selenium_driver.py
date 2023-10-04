@@ -38,6 +38,3 @@ class Driver_Obj:
             user_agent_list = file.read().strip().split("\n")
             self.user_agent = user_agent_list.pop(random.randint(0, len(user_agent_list)))
             return self.user_agent
-
-
-
