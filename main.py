@@ -1,20 +1,25 @@
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium_driver import Driver_Obj
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.common import NoSuchElementException, ElementNotInteractableException
+from driver_adapter import Driver_Adapter
+import asyncio
+
+VALID_STATUSES = [200, 301, 302, 307, 404]
 
 
-testing = Driver_Obj()
-"""
-with open("mxlinks", "r") as links:
-    links_list = links.read().strip().split("\n")
-    for link in links_list:
-        testing.scrape(link)
-        break
-"""
-xpath = "/html/body/div[2]/div/main/h1"
-testing.scrape("https://nowsecure.nl")
-wait = WebDriverWait(testing.driver, 30)
-wait.until(ec.text_to_be_present_in_element_value((By.XPATH, xpath), text_="OH YEAH"))
-testing.driver.save_screenshot("test.png")
+async def task_coroutine(link):
+    try:
+        async with Driver_Adapter(link) as dp:
+            await dp.get_page
+            if dp.page_status_code in VALID_STATUSES:
+                print(f"Response: {dp.page_status_code}\nFrom: {link}")
+    except Exception as e:
+        print(f"Exception: {e}")
+
+
+async def main_scraper():
+    with open("mxlinks", "r") as link_list:
+        link_list = link_list.read().strip().split("\n")
+        tasks = [asyncio.create_task(task_coroutine(link)) for link in link_list]
+        for task in tasks:
+            await asyncio.gather(task)
+        await asyncio.sleep(0)
+
+asyncio.run(main_scraper())

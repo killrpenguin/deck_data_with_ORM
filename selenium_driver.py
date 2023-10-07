@@ -14,7 +14,7 @@ from selenium.common import NoSuchElementException, ElementNotInteractableExcept
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from bs4 import BeautifulSoup as bs
-import undetected_edgedriver as ue
+from seleniumwire.undetected_chromedriver.webdriver import E
 from seleniumwire.webdriver import EdgeOptions
 import seleniumwire.request
 
