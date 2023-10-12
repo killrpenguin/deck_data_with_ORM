@@ -1,7 +1,7 @@
+import traceback
 from contextlib import asynccontextmanager
 import random
 import seleniumwire
-from seleniumwire.request import *
 from seleniumwire.webdriver import EdgeOptions
 
 
@@ -24,20 +24,21 @@ class Driver_Adapter(object):
         edge_options.add_argument("--proxy_server=%s" % self.proxy)
         edge_options.add_argument("--user_agents=%s" % self.user_agent)
         self.driver = seleniumwire.webdriver.Edge(options=edge_options)
-        self.page = self.get_page()
 
-    def __aiter__(self):
-        return self
+    async def __anext__(self):
+        return await self
 
-    def __anext__(self):
-
+    async def __aiter__(self):
+        return await self
 
     async def get_page(self):
-        page = self.driver.get(self.link)
         try:
-            yield page
+            self.driver.get(self.link)
+            if len(self.driver.page_source) > 1:
+                return self.driver
         except Exception as e:
             print(f"Error: {e}")
+            print(f"{traceback.format_exc()}")
 
     @property
     def page_status_code(self):

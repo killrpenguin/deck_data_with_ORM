@@ -1,5 +1,7 @@
 from contextlib import asynccontextmanager
+from concurrent.futures.thread import ThreadPoolExecutor
 import random
+import asyncio
 import seleniumwire
 from seleniumwire.request import *
 from seleniumwire.webdriver import EdgeOptions
@@ -20,12 +22,12 @@ class Driver_Adapter(object):
         edge_options.page_load_strategy = "eager"
         edge_options.add_argument("disable-gpu")
         self.driver = seleniumwire.webdriver.Edge(options=edge_options)
-        self.page = self.get_page()
 
     def __aiter__(self):
         return self
 
     def __anext__(self):
+        pass
 
     async def get_page(self):
         try:
@@ -45,5 +47,3 @@ class Driver_Adapter(object):
             user_agent_list = file.read().strip().split("\n")
             self.user_agent = user_agent_list.pop(random.randint(0, len(user_agent_list)))
             return self.user_agent
-
-
