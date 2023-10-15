@@ -3,6 +3,10 @@ from contextlib import asynccontextmanager
 import random
 import seleniumwire
 from seleniumwire.webdriver import EdgeOptions
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.common import NoSuchElementException, ElementNotInteractableException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class Adapter_Error(Exception):
@@ -27,7 +31,9 @@ class Driver_Adapter(object):
 
     def __await__(self):
         async def closure():
-            print('await')
+            wait = WebDriverWait(self.driver, 30)
+            self.driver.get(self.link)
+            wait.until(lambda driver: self.driver.execute_script('return document.readyState') == 'complete')
             return self
         return closure().__await__()
 

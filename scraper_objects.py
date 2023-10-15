@@ -3,7 +3,7 @@ import re
 from bs4 import BeautifulSoup as bs
 
 
-class Decks:
+class Decks(object):
     def __init__(self):
         self.deck_list_database = self.get_ddb_list()
         self.proxies = 'http://43.157.8.79:8888'

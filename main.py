@@ -18,8 +18,7 @@ async def task_coroutine(link):
         if dp.page_status_code in VALID_STATUSES:
             print(f"Response: {dp.page_status_code}\nFrom: {link}")
     except Exception as e:
-        print(f"Exception: {e}")
-        print(f"{traceback.format_exc()}")
+        print(f"Exception: {e}\n{traceback.format_exc()}")
 
 
 async def main_scraper():
