@@ -25,20 +25,17 @@ class Driver_Adapter(object):
         edge_options.add_argument("--user_agents=%s" % self.user_agent)
         self.driver = seleniumwire.webdriver.Edge(options=edge_options)
 
+    def __await__(self):
+        async def closure():
+            print('await')
+            return self
+        return closure().__await__()
+
     async def __anext__(self):
         return await self
 
     async def __aiter__(self):
         return await self
-
-    async def get_page(self):
-        try:
-            self.driver.get(self.link)
-            if len(self.driver.page_source) > 1:
-                return self.driver
-        except Exception as e:
-            print(f"Error: {e}")
-            print(f"{traceback.format_exc()}")
 
     @property
     def page_status_code(self):
