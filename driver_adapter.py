@@ -1,53 +1,38 @@
-import traceback
-from contextlib import asynccontextmanager
-import random
 import seleniumwire
+import asyncio
+import random
+from seleniumwire import webdriver
 from seleniumwire.webdriver import EdgeOptions
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.common import NoSuchElementException, ElementNotInteractableException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-
 
 class Adapter_Error(Exception):
     pass
 
-
-@asynccontextmanager
-class Driver_Adapter(object):
-    def __init__(self, link):
-        self.link = link
-        self.user_agent = self.get_random_agent
-        self.proxy = "http://134.195.101.34:8080"
+class Driver_Adapter(webdriver.Edge):
+    def __init__(self, link, *args, **kwargs):
         edge_options = EdgeOptions()
         edge_options.use_chromium = True
-        edge_options.add_argument("headless")
         edge_options.add_argument("start-maximized")
         edge_options.page_load_strategy = "eager"
         edge_options.add_argument("disable-gpu")
-        edge_options.add_argument("--proxy_server=%s" % self.proxy)
-        edge_options.add_argument("--user_agents=%s" % self.user_agent)
+        edge_options.add_argument("headless")
+        super().__init__(options=edge_options)
+        self.link = link
+        self.valid_resps = [200, 301, 302, 307, 404]
+        self.user_agent = ''
+        self.proxy = ''
         self.driver = seleniumwire.webdriver.Edge(options=edge_options)
+        self.page = self.driver.get(self.link)
 
     def __await__(self):
         async def closure():
-            wait = WebDriverWait(self.driver, 30)
-            self.driver.get(self.link)
-            wait.until(lambda driver: self.driver.execute_script('return document.readyState') == 'complete')
+            for request in self.driver.requests:
+                if (request.url == self.link) and (request.response.status_code in self.valid_resps):
+                    print(f"Success! {request.response.status_code}")
+                    print(f"{self.driver.page_source}")
+                    return self
             return self
+
         return closure().__await__()
-
-    async def __anext__(self):
-        return await self
-
-    async def __aiter__(self):
-        return await self
-
-    @property
-    def page_status_code(self):
-        for request in self.driver.requests:
-            if request.url == self.link:
-                return request.response.status_code
 
     @property
     def get_random_agent(self):
