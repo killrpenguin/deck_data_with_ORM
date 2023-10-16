@@ -39,7 +39,7 @@ async def main():
         link_list = link_list.read().strip().split("\n")
         tasks = [asyncio.create_task(task_coroutine(link)) for link in link_list]
         for task in tasks:
-            await asyncio.gather(task)
+            await task
 
 
 asyncio.run(main())
