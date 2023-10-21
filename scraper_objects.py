@@ -20,3 +20,7 @@ class Decks(object):
         deck_hrefs = [href.strip() for href in deck_hrefs if '' != href if '/' != href]
         return deck_hrefs
 
+
+test = Decks()
+for link in test.deck_list_database:
+    print(f"{link}")

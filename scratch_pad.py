@@ -4,7 +4,11 @@ from seleniumwire import webdriver
 from seleniumwire.webdriver import EdgeOptions
 
 
-class Driver_Adapter(webdriver.Edge):
+class WebDriver_Base(webdriver.Edge):
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+
+class Driver_Adapter(WebDriver_Base):
     def __init__(self, link, *args, **kwargs):
         edge_options = EdgeOptions()
         edge_options.use_chromium = True
