@@ -7,6 +7,7 @@ from seleniumwire.webdriver import EdgeOptions
 class Adapter_Error(Exception):
     pass
 
+
 class Driver_Adapter(webdriver.Edge):
     def __init__(self, link, *args, **kwargs):
         edge_options = EdgeOptions()
