@@ -7,8 +7,7 @@ from seleniumwire.webdriver import EdgeOptions
 class Adapter_Error(Exception):
     pass
 
-# class Driver_Adapter(webdriver.Edge):
-class Driver_Adapter():
+class Driver_Adapter(webdriver.Edge):
     def __init__(self, link, *args, **kwargs):
         edge_options = EdgeOptions()
         edge_options.use_chromium = True
@@ -16,17 +15,16 @@ class Driver_Adapter():
         edge_options.page_load_strategy = "eager"
         edge_options.add_argument("disable-gpu")
         edge_options.add_argument("headless")
-        # super().__init__(options=edge_options)
+        super().__init__(options=edge_options)
         self.link = link
         self.valid_resps = [200, 301, 302, 307, 404]
         self.user_agent = ''
-        self.proxy = 'http://24.158.29.166:80'
-        self.driver = seleniumwire.webdriver.Edge(options=edge_options)
-        self.page = self.driver.get(self.link)
+        # self.proxy = 'http://24.158.29.166:80'
+        self.page = self.get(self.link)
 
     def __await__(self) -> webdriver:
         async def closure():
-            for request in self.driver.requests:
+            for request in self.requests:
                 if (request.url == self.link) and (request.response.status_code in self.valid_resps):
                     print(f"Success! {request.response.status_code}")
                     # print(f"{self.driver.page_source}")
