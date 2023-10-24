@@ -21,16 +21,14 @@ class Driver_Adapter(webdriver.Edge):
         self.valid_resps = [200, 301, 302, 307, 404]
         self.user_agent = ''
         # self.proxy = 'http://24.158.29.166:80'
-        self.page = self.get(self.link)
 
     def __await__(self) -> webdriver:
         async def closure():
             for request in self.requests:
                 if (request.url == self.link) and (request.response.status_code in self.valid_resps):
                     print(f"Success! {request.response.status_code}")
-                    # print(f"{self.driver.page_source}")
                     return self
-            # return self
+            return self
 
         return closure().__await__()
 
