@@ -15,24 +15,27 @@ class Driver_Adapter(webdriver.Edge):
         edge_options.add_argument("start-maximized")
         edge_options.page_load_strategy = "eager"
         edge_options.add_argument("disable-gpu")
-        edge_options.add_argument("headless")
+        # edge_options.add_argument("headless")
         super().__init__(options=edge_options)
         self.link = link
         self.valid_resps = [200, 301, 302, 307, 404]
         self.user_agent = ''
-        # self.proxy = 'http://24.158.29.166:80'
-        self.page = self.get(self.link)
+        self.proxy = 'http://24.158.29.166:80'
+        # self.page = self.get(self.link)
 
     def __await__(self) -> webdriver:
         async def closure():
-            for request in self.requests:
+            """for request in self.requests:
                 if (request.url == self.link) and (request.response.status_code in self.valid_resps):
                     print(f"Success! {request.response.status_code}")
                     # print(f"{self.driver.page_source}")
                     return self
-            # return self
-
+            return self"""
         return closure().__await__()
+
+    async def get_page(self):
+        self.get(self.link)
+        return self
 
     @property
     def get_random_agent(self):

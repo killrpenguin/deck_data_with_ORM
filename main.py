@@ -4,7 +4,7 @@ from driver_adapter import Driver_Adapter
 
 async def task_coroutine(link: str):
     driver = await Driver_Adapter(link=link)
-    driver.get(driver.link)
+    await driver.get_page()
     return driver
 
 

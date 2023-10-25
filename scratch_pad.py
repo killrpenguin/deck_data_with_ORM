@@ -14,7 +14,7 @@ class Driver_Adapter(webdriver.Edge):
         edge_options.add_argument("start-maximized")
         edge_options.page_load_strategy = "eager"
         edge_options.add_argument("disable-gpu")
-        edge_options.add_argument("headless")
+        # edge_options.add_argument("headless")
         super().__init__(options=edge_options)
         self.link = link
         self.valid_resps = [200, 301, 302, 307, 404]
@@ -31,19 +31,17 @@ class Driver_Adapter(webdriver.Edge):
             return self
         return closure().__await__()
 
-    def get_top16(self) -> list:
-        link = "https://edhtop16.com/commander/Kraum," \
-               "%20Ludevic's%20Opus%20+%20Tymna%20the%20Weaver?tourney_filter__size__%24gte=64" \
-               "&tourney_filter__dateCreated__%24gte=1660826678"
-        xpath = '//*[@id="root"]/div/div[2]/table/tbody/tr[1]/td[2]/span/a'
-        wait = WebDriverWait(self.driver, 30)
-        self.top_16 = wait.until(ec.presence_of_element_located((By.XPATH, xpath))).text.strip()
-        return self.top_16
+    async def testing(self):
+        self.execute_script("$.get(page_link%s)" % self.link)
+        print("show me something")
+        return self
+
+page_link = "https://www.moxfield.com/decks/DujxA8PlG0eTQZ_hawsTmQ"
+
 
 async def task_coroutine(link: str):
     driver = await Driver_Adapter(link=link)
-    driver.get_top16()
-    print(f"{driver.top_16}")
+    await driver.testing()
     return driver
 
 
